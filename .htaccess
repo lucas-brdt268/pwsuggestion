@@ -1,0 +1,11 @@
+Options -Indexes
+ErrorDocument 403 /paintwall/errors/403.php
+ErrorDocument 404 /paintwall/errors/404.php
+
+RewriteEngine On
+# RewriteRule ^errors(/|$) - [F,NC]
+RewriteRule ^include(/|$) - [F,NC]
+RewriteRule ^logs(/|$) - [F,NC]
+RewriteRule ^uploads(/|$) - [F,NC]
+RewriteRule ^output(/|$) - [F,NC]
+RewriteRule ^csv(/|$) - [F,NC]
