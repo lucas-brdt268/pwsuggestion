@@ -2,18 +2,10 @@ const imageUpload = document.getElementById('imageUpload');
 const imagePreview = document.getElementById('imagePreview');
 const customFileUpload = document.querySelector('.custom-file-upload');
 const styleSelect = document.getElementById('styleSelect');
-const methodSelect = document.getElementById('methodSelect');
+// const methodSelect = document.getElementById('methodSelect');
 const suggestButton = document.getElementById('suggestButton');
 const suggestionOutput = document.getElementById('suggestionOutput');
 const preview = document.getElementById('preview');
-
-// Mock color suggestions with Japanese-inspired palette
-const colorSuggestions = {
-    modern: { 'ai': '#4A90E2', 'color-theory': '#E8ECEF', 'trend-based': '#2E2E2E' },
-    traditional: { 'ai': '#8B5A2B', 'color-theory': '#D3C8A6', 'trend-based': '#A52A2A' },
-    coastal: { 'ai': '#4682B4', 'color-theory': '#B0E0E6', 'trend-based': '#F0F8FF' },
-    rustic: { 'ai': '#6B4E31', 'color-theory': '#8B4513', 'trend-based': '#D2B48C' }
-};
 
 // Trigger file input on custom button click
 customFileUpload.addEventListener('click', () => {
@@ -37,23 +29,50 @@ imageUpload.addEventListener('change', (event) => {
 });
 
 // Handle suggest button click
-suggestButton.addEventListener('click', () => {
+suggestButton.addEventListener('click', async () => {
+    suggestButton.disabled = true;
+
     const style = styleSelect.value;
-    const method = methodSelect.value;
+    // const method = methodSelect.value;
 
     if (!imageUpload.files[0]) {
-        suggestionOutput.textContent = 'まず画像をアップロードしてください。';
+        // suggestionOutput.textContent = 'まず画像をアップロードしてください。';
+        alert('まず画像をアップロードしてください。');
         return;
     }
 
-    // Get suggested color
-    const suggestedColor = colorSuggestions[style][method] || '#FFFFFF';
-    suggestionOutput.textContent = `提案された色: ${suggestedColor} (スタイル: ${styleSelect.options[styleSelect.selectedIndex].text}, 方法: ${methodSelect.options[methodSelect.selectedIndex].text})`;
+    const form = new FormData();
+    form.append('image', imageUpload.files[0]);
+    form.append('style', styleSelect.value);
+    console.log(form);
 
-    // Apply color overlay to preview
-    if (imagePreview.src) {
-        preview.style.display = 'block';
-        preview.style.backgroundColor = suggestedColor;
-        preview.style.opacity = '0.7';
+    try {
+        const response = await fetch('./suggest.php', {
+            method: 'post',
+            body: form,
+        });
+
+        try {
+            const json = await response.json();
+        } catch (e) {
+            throw new Error('システムに問題が発生しています。しばらく経ってから再度お試しください。');
+        }
+
+        if (!response.ok && json) {
+            throw new Error(json.error || '画像の生成に失敗しました。');
+        }
+
+        console.log(json);
+
+        const base64Image = json.base64_image;
+        const suggestedColor = json.suggested_color;
+        const base64ImageUrl = `data:image/jpg;base64,${base64Image}`;
+        
+        preview.src = base64ImageUrl;
+        suggestionOutput.textContent = `提案された色: ${suggestedColor} (スタイル: ${styleSelect.options[styleSelect.selectedIndex].text})`;
+    } catch (e) {
+        suggestionOutput.textContent = e.message;
     }
+
+    suggestButton.disabled = false;
 });

@@ -102,6 +102,10 @@ select:focus {
     transition: background 0.3s;
 }
 
+#suggestButton:disabled{
+    background-color: #333;
+}
+
 #suggestButton:hover {
     background: #6B4E31;
 }
