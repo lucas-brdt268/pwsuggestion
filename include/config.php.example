@@ -1,0 +1,6 @@
+<?php
+$BASE_URL = 'http://localhost/pwsuggestion';
+$OPENAI_API_KEY = "sk-proj-abcdef";
+$REPLICATE_API_KEY = "r8_abcdef";
+$UPLOAD_DIR = './uploads/';
+$TIMEOUT = 60;
