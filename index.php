@@ -43,14 +43,6 @@ require_once "./include/helpers.php";
                 <option value="rustic">田舎風</option>
             </select>
         </div>
-        <div class="input-group">
-            <label for="methodSelect">提案方法を選択</label>
-            <select id="methodSelect">
-                <option value="ai">AI分析</option>
-                <option value="color-theory">色彩理論</option>
-                <option value="trend-based">トレンドベース</option>
-            </select>
-        </div>
         <button id="suggestButton">色を提案</button>
         <div id="suggestionOutput">提案された色: なし</div>
         <img id="preview" alt="提案色プレビュー">
