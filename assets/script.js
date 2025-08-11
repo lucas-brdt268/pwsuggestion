@@ -52,8 +52,9 @@ suggestButton.addEventListener('click', async () => {
             body: form,
         });
 
+        let json = null;
         try {
-            const json = await response.json();
+            json = await response.json();
         } catch (e) {
             throw new Error('システムに問題が発生しています。しばらく経ってから再度お試しください。');
         }
