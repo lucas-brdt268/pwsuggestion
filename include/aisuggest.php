@@ -30,7 +30,7 @@ function trySuggestColor($imagePath, $style)
                     [
                         "type" => "text",
                         "text" => "Indicate me a suitable exterior wall color name of the house according the {$style} style."
-                            . ' Output style is "Color Name: [color name]" if succeed, "Failed" if fail.'
+                            . ' Output style is "Color Name: [color name]" if succeed.'
                     ],
                     [
                         "type" => "image_url",
@@ -60,7 +60,7 @@ function trySuggestColor($imagePath, $style)
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // 接続タイムアウトを10秒に設定
 
     $response = curl_exec($ch);
-
+    // $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     if (curl_errno($ch)) {
         throw new Exception('Curl error: ' . curl_error($ch));
     }
