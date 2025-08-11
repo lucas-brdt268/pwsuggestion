@@ -29,8 +29,10 @@ function trySuggestColor($imagePath, $style)
                 'content' => [
                     [
                         "type" => "text",
-                        "text" => "Indicate me a suitable exterior wall color name of the house according the {$style} style."
-                            . ' Output style is "Color Name: [color name]" if succeed.'
+                        "text" => "You must provide me a suitable exterior wall color name of the house in the {$style} style."
+                            . ' The color name format should be like: '
+                            . '"a neutral, medium-dark gray with a hint of green".\n'
+                            . ' Output style is "Color Name: [color name]" if succeed, "Failed: [reason]" if fail.'
                     ],
                     [
                         "type" => "image_url",
@@ -49,6 +51,10 @@ function trySuggestColor($imagePath, $style)
         'Content-Type: application/json'
     ];
 
+    global $TIMEOUT, $__start_time;
+    $elapsedTime = microtime(true) - $__start_time;
+    $remainTimeout = $TIMEOUT - $elapsedTime;
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $endpoint);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -56,7 +62,7 @@ function trySuggestColor($imagePath, $style)
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30); // タイムアウトを30秒に設定
+    curl_setopt($ch, CURLOPT_TIMEOUT, $remainTimeout); // タイムアウトを30秒に設定
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // 接続タイムアウトを10秒に設定
 
     $response = curl_exec($ch);
@@ -67,8 +73,9 @@ function trySuggestColor($imagePath, $style)
     curl_close($ch);
     $result = json_decode($response, true);
     $content =  $result['choices'][0]['message']['content'];
-    if ($content === 'Failed') {
-        throw new Exception('Failed to get color name from OpenAI API');
+    if (str_starts_with($content, 'Failed')) {
+        $reason = trim(str_replace('Failed: ', '', $content));
+        throw new Exception("Failed to suggest ($reason)");
     }
     $colorName = trim(str_replace('Color Name: ', '', $content));
     return $colorName;

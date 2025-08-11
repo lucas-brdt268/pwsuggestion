@@ -42,7 +42,8 @@ function imggen($imagePath, $color)
     ];
 
     global $TIMEOUT, $__start_time;
-    $remainTimeout = $TIMEOUT - $__start_time;
+    $elapsedTime = microtime(true) - $__start_time;
+    $remainTimeout = $TIMEOUT - $elapsedTime;
 
     $curl = curl_init();
     curl_setopt_array($curl, [

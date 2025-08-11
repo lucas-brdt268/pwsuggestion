@@ -7,8 +7,8 @@
 
 // エラーレポートを無効にする
 // Disable error reporting
-error_reporting(0);
-ini_set('display_errors', '0');
+// error_reporting(0);
+// ini_set('display_errors', '0');
 
 // スクリプトの実行時間を60秒に設定
 // Set script execution time to 60 seconds from now

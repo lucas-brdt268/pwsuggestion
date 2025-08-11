@@ -31,6 +31,7 @@ imageUpload.addEventListener('change', (event) => {
 // Handle suggest button click
 suggestButton.addEventListener('click', async () => {
     suggestButton.disabled = true;
+    preview.style.display = 'none';
 
     const style = styleSelect.value;
     // const method = methodSelect.value;
@@ -44,10 +45,10 @@ suggestButton.addEventListener('click', async () => {
     const form = new FormData();
     form.append('image', imageUpload.files[0]);
     form.append('style', styleSelect.value);
-    console.log(form);
+    console.log(form.values());
 
     try {
-        const response = await fetch('./suggest.php', {
+        const response = await fetch('suggest.php', {
             method: 'post',
             body: form,
         });
@@ -70,6 +71,7 @@ suggestButton.addEventListener('click', async () => {
         const base64ImageUrl = `data:image/jpg;base64,${base64Image}`;
         
         preview.src = base64ImageUrl;
+        preview.style.display = 'block';
         suggestionOutput.textContent = `提案された色: ${suggestedColor} (スタイル: ${styleSelect.options[styleSelect.selectedIndex].text})`;
     } catch (e) {
         suggestionOutput.textContent = e.message;

@@ -2,6 +2,7 @@
 require_once './include/request_init.php';
 require_once './include/helpers.php';
 require_once './include/aisuggest.php';
+require_once './include/imggen.php';
 
 /**
  * suggest.php
@@ -42,7 +43,7 @@ if (!move_uploaded_file($tempName, $targetPath)) {
 }
 trace("File id: $fileId");
 
-$color = $_POST['style'];
+$style = $_POST['style'];
 trace("Style: $style");
 
 try {
@@ -55,10 +56,12 @@ trace("Color Name: $colorName");
 
 try {
     $imgUrl = imggen($targetPath, $colorName);
+    trace("Generated Image URL: $imgUrl");
 } catch (Exception $e) {
     trace('Error(500): ' . $e->getMessage());
     resJson(['error' => 'システムに問題が発生しています。しばらく経ってから再度お試しください。'], 500);
 }
 
+$imageData = file_get_contents($imgUrl);
 $base64Image = base64_encode($imageData);
 resJson(['base64_image' => $base64Image, 'suggested_color' => $colorName]);
