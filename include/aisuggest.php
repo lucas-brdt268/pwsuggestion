@@ -30,7 +30,7 @@ function trySuggestColor($imagePath, $style)
                     [
                         "type" => "text",
                         "text" => "Indicate me a suitable exterior wall color name of the house according the {$style} style."
-                            . ' Output style is "Color Name: [color name]" if succeed.'
+                            . ' Output style is "Color Name: [color name]" if succeed, "Failed" if fail.'
                     ],
                     [
                         "type" => "image_url",

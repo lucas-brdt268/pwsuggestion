@@ -43,11 +43,11 @@ suggestButton.addEventListener('click', async () => {
 
     const form = new FormData();
     form.append('image', imageUpload.files[0]);
-    form.append('style', styleSelect.value);
-    console.log(form);
+    form.append('style', style);
+    console.log(form.values());
 
     try {
-        const response = await fetch('./suggest.php', {
+        const response = await fetch('/suggest.php', {
             method: 'post',
             body: form,
         });
